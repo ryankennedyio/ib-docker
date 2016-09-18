@@ -18,8 +18,10 @@ WORKDIR /opt/IBController/
 RUN wget -q https://github.com/ib-controller/ib-controller/releases/download/3.2.0/IBController-3.2.0.zip
 RUN unzip ./IBController-3.2.0.zip
 RUN chmod -R u+x *.sh
+WORKDIR /opt/IBController/
+RUN chmod -R u+x *.sh
 
 WORKDIR /
 
 # Install TWS
-RUN yes n | /opt/IB/tws/tws-latest-standalone-linux-x64.sh
+RUN yes n | /opt/TWS/tws-latest-standalone-linux-x64.sh
