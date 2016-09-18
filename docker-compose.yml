@@ -3,4 +3,4 @@ tws:
     - "4001:4001"
     - "5900:5900"
   volumes:
-    - IBController.ini:/IBController.ini
+    - IBController.ini:~/IBController/IBController.ini
