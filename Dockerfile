@@ -7,14 +7,14 @@ RUN  apt-get update \
   && apt-get install -y xvfb
 
 # Setup IB TWS
-RUN mkdir -p /opt/IB/tws
-WORKDIR /opt/IB/tws
+RUN mkdir -p /opt/TWS
+WORKDIR /opt/TWS
 RUN wget -q https://download2.interactivebrokers.com/installers/tws/latest-standalone/tws-latest-standalone-linux-x64.sh
 RUN chmod a+x tws-latest-standalone-linux-x64.sh
 
 # Setup  IBController
-RUN mkdir -p /opt/IB/ibcontroller
-WORKDIR /opt/IB/ibcontroller
+RUN mkdir -p /opt/IBController/
+WORKDIR /opt/IBController/
 RUN wget -q https://github.com/ib-controller/ib-controller/releases/download/3.2.0/IBController-3.2.0.zip
 RUN unzip ./IBController-3.2.0.zip
 RUN chmod -R u+x *.sh
