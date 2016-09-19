@@ -17,11 +17,12 @@ RUN mkdir -p /opt/IBController/
 WORKDIR /opt/IBController/
 RUN wget -q https://github.com/ib-controller/ib-controller/releases/download/3.2.0/IBController-3.2.0.zip
 RUN unzip ./IBController-3.2.0.zip
-RUN chmod -R u+x *.sh
-WORKDIR /opt/IBController/
-RUN chmod -R u+x *.sh
+RUN chmod -R u+x *.sh && chmod -R u+x Scripts/*.sh
 
 WORKDIR /
 
 # Install TWS
 RUN yes n | /opt/TWS/tws-latest-standalone-linux-x64.sh
+
+# Launch TWS via script.
+CMD /opt/IBController/Scripts/DisplayBannerAndLaunch.sh
