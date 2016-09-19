@@ -1,7 +1,7 @@
 tws:
   image: ryankennedyio/ib-docker
   ports:
-    - 4001:4001
+    - 4002:4002
   volumes:
     - ./IBController.ini:/root/IBController/IBController.ini
     - ./jts.ini:/root/Jts/jts.ini

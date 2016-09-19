@@ -4,7 +4,10 @@ MAINTAINER Ryan Kennedy <hello@ryankennedy.io>
 RUN  apt-get update \
   && apt-get install -y wget \
   && apt-get install -y unzip \
-  && apt-get install -y xvfb
+  && apt-get install -y xvfb \
+  && apt-get install -y libxtst6 \
+  && apt-get install -y libxrender1 \
+  && apt-get install -y libxi6
 
 # Setup IB TWS
 RUN mkdir -p /opt/TWS
@@ -24,5 +27,9 @@ WORKDIR /
 # Install TWS
 RUN yes n | /opt/TWS/tws-latest-standalone-linux-x64.sh
 
+# Launch a virtual screen
+RUN Xvfb :1 -screen 0 1024x768x24 2>&1 >/dev/null &
+RUN export DISPLAY=:1
+
 # Launch TWS via script.
-CMD /opt/IBController/Scripts/DisplayBannerAndLaunch.sh
+CMD xvfb-run /opt/IBController/Scripts/DisplayBannerAndLaunch.sh
