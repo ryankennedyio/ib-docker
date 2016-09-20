@@ -1,10 +1,11 @@
 tws:
   image: ryankennedyio/ib-docker
   ports:
-    - 4002:4002
+    - "4000:4000"
+    - "4002:4002"
   volumes:
     - ./IBController.ini:/root/IBController/IBController.ini
-    - ./jts.ini:/root/Jts/jts.ini
+    #- ./jts.ini:/root/Jts/jts.ini
   environment:
     # Variables pulled from /IBController/IBControllerGatewayStart.sh
     - TWS_MAJOR_VRSN=958
