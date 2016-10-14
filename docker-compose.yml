@@ -1,13 +1,17 @@
 tws:
   image: ryankennedyio/ib-docker
   ports:
-    - 4002:4002
+    - "4001:4001"
+    - "4002:4002"
+    - "4003:4003"
+    - "5900:5900"
   volumes:
     - ./IBController.ini:/root/IBController/IBController.ini
     - ./jts.ini:/root/Jts/jts.ini
   environment:
     # Variables pulled from /IBController/IBControllerGatewayStart.sh
-    - TWS_MAJOR_VRSN=958
+    - VNC_PASSWORD=password
+    - TWS_MAJOR_VRSN=959
     - IBC_INI=/root/IBController/IBController.ini
     - TRADING_MODE=
     - IBC_PATH=/opt/IBController

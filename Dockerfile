@@ -7,7 +7,8 @@ RUN  apt-get update \
   && apt-get install -y xvfb \
   && apt-get install -y libxtst6 \
   && apt-get install -y libxrender1 \
-  && apt-get install -y libxi6
+  && apt-get install -y libxi6 \
+  && apt-get install -y socat
 
 # Setup IB TWS
 RUN mkdir -p /opt/TWS
@@ -31,5 +32,5 @@ RUN yes n | /opt/TWS/tws-latest-standalone-linux-x64.sh
 RUN Xvfb :1 -screen 0 1024x768x24 2>&1 >/dev/null &
 RUN export DISPLAY=:1
 
-# Launch TWS via script.
-CMD xvfb-run /opt/IBController/Scripts/DisplayBannerAndLaunch.sh
+ADD runscript.sh runscript.sh
+CMD bash runscript.sh
