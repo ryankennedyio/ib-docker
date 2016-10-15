@@ -28,6 +28,8 @@ WORKDIR /
 # Install TWS
 RUN yes n | /opt/TWS/tws-latest-standalone-linux-x64.sh
 
+#CMD yes
+
 # Launch a virtual screen
 RUN Xvfb :1 -screen 0 1024x768x24 2>&1 >/dev/null &
 RUN export DISPLAY=:1
