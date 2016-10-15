@@ -1,8 +1,6 @@
 tws:
   image: ryankennedyio/ib-docker
   ports:
-    - "4001:4001"
-    - "4002:4002"
     - "4003:4003"
     - "5900:5900"
   volumes:
