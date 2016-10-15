@@ -2,9 +2,13 @@ Container to easily set up Interactive Brokers Gateway in a headless environment
 
 ## Quick Usage
 1) Check out the repo.
+
 2) `docker build -t <pick-a-name> .` from within the repo. You should build your own image rather than use one on dockerhub for security reasons.
+
 3) Set your own environment variables as necessary in `docker-compose.yml`. This likely includes copying a `jts.ini` file in from a computer you have used IB on already.
+
 4) `docker-compose up`
+
 5) The IB API is now available from your host on `127.0.0.1:4003`
 
 ### Configuration
