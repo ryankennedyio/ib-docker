@@ -7,6 +7,7 @@ tws:
     - ./IBController.ini:/root/IBController/IBController.ini
     - ./jts.ini:/root/Jts/jts.ini
   environment:
+    - TZ=Australia/Adelaide
     # Variables pulled from /IBController/IBControllerGatewayStart.sh
     - VNC_PASSWORD=password
     - TWS_MAJOR_VRSN=959
