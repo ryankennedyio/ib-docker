@@ -10,7 +10,7 @@ tws:
     - TZ=Australia/Adelaide
     # Variables pulled from /IBController/IBControllerGatewayStart.sh
     - VNC_PASSWORD=password
-    - TWS_MAJOR_VRSN=959
+    - TWS_MAJOR_VRSN=961
     - IBC_INI=/root/IBController/IBController.ini
     - TRADING_MODE=
     - IBC_PATH=/opt/IBController
