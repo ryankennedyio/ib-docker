@@ -1,6 +1,8 @@
 Container to easily set up Interactive Brokers Gateway in a headless environment.
 
 ## Quick Usage
+This assumes some basic working knowledge of Docker. The (getting started)[https://docs.docker.com/engine/getstarted/] tutorial is the fastest way to learn the basics.
+
 1) Check out the repo.
 
 2) `docker build -t <pick-a-name> .` from within the repo. You should build your own image rather than use one on dockerhub for security reasons.
