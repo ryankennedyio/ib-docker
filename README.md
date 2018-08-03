@@ -5,7 +5,7 @@ This assumes some basic working knowledge of Docker. The [getting started](https
 
 1) Check out the repo.
 
-2) `docker build -t <pick-a-name> .` from within the repo. You should build your own image rather than use one on dockerhub for security reasons.
+2) `docker build -t ryankennedyio/ib-docker .` from within the repo. You should build your own image rather than use one on dockerhub, because that isn't available anymore.
 
 3) Set your own environment variables as necessary in `docker-compose.yml`. This likely includes copying a `jts.ini` file in from a computer you have used IB on already.
 
