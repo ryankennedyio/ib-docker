@@ -1,5 +1,6 @@
 tws:
-  image: ryankennedyio/ib-docker
+  build: ./
+  container_name: ibconnect
   ports:
     - "4003:4003"
     - "5900:5900"
@@ -10,7 +11,7 @@ tws:
     - TZ=Australia/Adelaide
     # Variables pulled from /IBController/IBControllerGatewayStart.sh
     - VNC_PASSWORD=password
-    - TWS_MAJOR_VRSN=960
+    - TWS_MAJOR_VRSN=968
     - IBC_INI=/root/IBController/IBController.ini
     - TRADING_MODE=
     - IBC_PATH=/opt/IBController
