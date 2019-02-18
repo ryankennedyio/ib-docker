@@ -15,18 +15,22 @@ RUN  apt-get update \
 RUN mkdir -p /opt/TWS
 WORKDIR /opt/TWS
 
+ENV ibgateway_version x64-v974.4g
+ENV ibgateway_script ibgateway-latest-standalone-linux-${ibgateway_version}.sh
+ENV ibcontroller_file IBController-QuantConnect-3.2.0.5.zip
+
 # from https://github.com/QuantConnect/Lean/blob/master/DockerfileLeanFoundation
-RUN wget http://cdn.quantconnect.com/interactive/ibgateway-latest-standalone-linux-x64-v968.2d.sh && \
-    chmod 777 ibgateway-latest-standalone-linux-x64-v968.2d.sh && \
-    ./ibgateway-latest-standalone-linux-x64-v968.2d.sh -q && \
-    wget -O ~/Jts/jts.ini http://cdn.quantconnect.com/interactive/ibgateway-latest-standalone-linux-x64-v968.2d.jts.ini && \
-    rm ibgateway-latest-standalone-linux-x64-v968.2d.sh
+RUN wget http://cdn.quantconnect.com/interactive/${ibgateway_script} && \
+    chmod 777 ${ibgateway_script} && \
+    ./${ibgateway_script} -q && \
+    wget -O ~/Jts/jts.ini http://cdn.quantconnect.com/interactive/ibgateway-latest-standalone-linux-${ibgateway_version}.jts.ini && \
+    rm ${ibgateway_script}
 
 # Install IB Controller: Installs to /opt/IBController
-RUN wget http://cdn.quantconnect.com/interactive/IBController-QuantConnect-3.2.0.4.zip && \
-    unzip IBController-QuantConnect-3.2.0.4.zip -d /opt/IBController && \
+RUN wget http://cdn.quantconnect.com/interactive/${ibcontroller_file} && \
+    unzip ${ibcontroller_file} -d /opt/IBController && \
     chmod -R 777 /opt/IBController && \
-    rm IBController-QuantConnect-3.2.0.4.zip
+    rm ${ibcontroller_file}
 
 # Install Java 8
 RUN \
