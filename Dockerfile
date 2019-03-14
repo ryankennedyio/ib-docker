@@ -1,45 +1,39 @@
-FROM ubuntu:18.04
-MAINTAINER Ryan Kennedy <hello@ryankennedy.io>
+# FROM ubuntu:18.04
+FROM phusion/baseimage:0.9.22
+MAINTAINER Giulio Giraldi <dongiulio@gmail.com>
 
-RUN  apt-get update \
-  && apt-get install -y wget \
-  && apt-get install -y unzip \
-  && apt-get install -y xvfb \
-  && apt-get install -y libxtst6 \
-  && apt-get install -y libxrender1 \
-  && apt-get install -y libxi6 \
-  && apt-get install -y socat \
-  && apt-get install -y software-properties-common
+# Use baseimage-docker's init system.
+CMD ["/sbin/my_init"]
 
-# Setup IB TWS
-RUN mkdir -p /opt/TWS
-WORKDIR /opt/TWS
+# Have to add env TZ=UTC. See https://github.com/dotnet/coreclr/issues/602
+RUN env TZ=UTC
 
-ENV ibgateway_version x64-v974.4g
-ENV ibgateway_script ibgateway-latest-standalone-linux-${ibgateway_version}.sh
-ENV ibcontroller_file IBController-QuantConnect-3.2.0.5.zip
+# Install OS Packages:
+# Misc tools for running Python.NET and IB inside a headless container.
+RUN apt-get update && apt-get install -y git bzip2 unzip wget python3-pip python-opengl && \
+    apt-get install -y clang cmake curl xvfb libxrender1 libxtst6 libxi6 libglib2.0-dev && \
+# Install R
+    apt-get install -y r-base pandoc libcurl4-openssl-dev
 
-# from https://github.com/QuantConnect/Lean/blob/master/DockerfileLeanFoundation
-RUN wget http://cdn.quantconnect.com/interactive/${ibgateway_script} && \
-    chmod 777 ${ibgateway_script} && \
-    ./${ibgateway_script} -q && \
-    wget -O ~/Jts/jts.ini http://cdn.quantconnect.com/interactive/ibgateway-latest-standalone-linux-${ibgateway_version}.jts.ini && \
-    rm ${ibgateway_script}
+# Java for running IB inside container:
+# https://github.com/dockerfile/java/blob/master/oracle-java8/Dockerfile
+RUN echo oracle-java8-installer shared/accepted-oracle-license-v1-1 select true | debconf-set-selections && \
+    add-apt-repository -y ppa:webupd8team/java && \
+    apt-get update && apt-get install -y oracle-java8-installer && \
+    rm -rf /var/lib/apt/lists/* && rm -rf /var/cache/oracle-jdk8-installer
 
-# Install IB Controller: Installs to /opt/IBController
-RUN wget http://cdn.quantconnect.com/interactive/${ibcontroller_file} && \
-    unzip ${ibcontroller_file} -d /opt/IBController && \
-    chmod -R 777 /opt/IBController && \
-    rm ${ibcontroller_file}
+# Install IB Gateway: Installs to ~/Jts
+RUN wget http://cdn.quantconnect.com/interactive/ibgateway-latest-standalone-linux-x64-v974.4g.sh && \
+    chmod 777 ibgateway-latest-standalone-linux-x64-v974.4g.sh && \
+    ./ibgateway-latest-standalone-linux-x64-v974.4g.sh -q && \
+    wget -O ~/Jts/jts.ini http://cdn.quantconnect.com/interactive/ibgateway-latest-standalone-linux-x64-v974.4g.jts.ini && \
+    rm ibgateway-latest-standalone-linux-x64-v974.4g.sh
 
-# Install Java 8
-RUN \
-  echo oracle-java8-installer shared/accepted-oracle-license-v1-1 select true | debconf-set-selections && \
-  add-apt-repository -y ppa:webupd8team/java && \
-  apt-get update && \
-  apt-get install -y oracle-java8-installer && \
-  rm -rf /var/lib/apt/lists/* && \
-  rm -rf /var/cache/oracle-jdk8-installer
+# Install IB Controller: Installs to ~/IBController
+RUN wget http://cdn.quantconnect.com/interactive/IBController-QuantConnect-3.2.0.5.zip && \
+    unzip IBController-QuantConnect-3.2.0.5.zip -d ~/IBController && \
+    chmod -R 777 ~/IBController && \
+    rm IBController-QuantConnect-3.2.0.5.zip
 
 WORKDIR /
 
