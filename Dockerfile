@@ -1,6 +1,8 @@
-# FROM ubuntu:18.04
 FROM phusion/baseimage:0.9.22
+
 MAINTAINER Giulio Giraldi <dongiulio@gmail.com>
+
+# from https://github.com/QuantConnect/Lean/blob/master/DockerfileLeanFoundation
 
 # Use baseimage-docker's init system.
 CMD ["/sbin/my_init"]
@@ -10,7 +12,8 @@ RUN env TZ=UTC
 
 # Install OS Packages:
 # Misc tools for running Python.NET and IB inside a headless container.
-RUN apt-get update && apt-get install -y git bzip2 unzip wget python3-pip python-opengl && \
+RUN apt-get update && \
+    apt-get install -y git bzip2 unzip wget python3-pip python-opengl  socat netcat && \
     apt-get install -y clang cmake curl xvfb libxrender1 libxtst6 libxi6 libglib2.0-dev && \
 # Install R
     apt-get install -y r-base pandoc libcurl4-openssl-dev
