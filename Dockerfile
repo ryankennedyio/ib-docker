@@ -1,42 +1,44 @@
-FROM ubuntu:16.04
-MAINTAINER Ryan Kennedy <hello@ryankennedy.io>
+FROM phusion/baseimage:0.9.22
 
-RUN  apt-get update \
-  && apt-get install -y wget \
-  && apt-get install -y unzip \
-  && apt-get install -y xvfb \
-  && apt-get install -y libxtst6 \
-  && apt-get install -y libxrender1 \
-  && apt-get install -y libxi6 \
-  && apt-get install -y socat \
-  && apt-get install -y software-properties-common
+MAINTAINER Giulio Giraldi <dongiulio@gmail.com>
 
-# Setup IB TWS
-RUN mkdir -p /opt/TWS
-WORKDIR /opt/TWS
-RUN wget -q http://data.quantconnect.com/interactive/ibgateway-latest-standalone-linux-x64-v960.2a.sh
-RUN chmod a+x ibgateway-latest-standalone-linux-x64-v960.2a.sh
+# from https://github.com/QuantConnect/Lean/blob/master/DockerfileLeanFoundation
 
-# Setup  IBController
-RUN mkdir -p /opt/IBController/
-WORKDIR /opt/IBController/
-RUN wget -q http://data.quantconnect.com/interactive/IBController-QuantConnect-3.2.0.zip
-RUN unzip ./IBController-QuantConnect-3.2.0.zip
-RUN chmod -R u+x *.sh && chmod -R u+x Scripts/*.sh
+# Use baseimage-docker's init system.
+CMD ["/sbin/my_init"]
 
-# Install Java 8
-RUN \
-  echo oracle-java8-installer shared/accepted-oracle-license-v1-1 select true | debconf-set-selections && \
-  add-apt-repository -y ppa:webupd8team/java && \
-  apt-get update && \
-  apt-get install -y oracle-java8-installer && \
-  rm -rf /var/lib/apt/lists/* && \
-  rm -rf /var/cache/oracle-jdk8-installer
+# Have to add env TZ=UTC. See https://github.com/dotnet/coreclr/issues/602
+RUN env TZ=UTC
+
+# Install OS Packages:
+# Misc tools for running Python.NET and IB inside a headless container.
+RUN apt-get update && \
+    apt-get install -y git bzip2 unzip wget python3-pip python-opengl  socat netcat && \
+    apt-get install -y clang cmake curl xvfb libxrender1 libxtst6 libxi6 libglib2.0-dev && \
+# Install R
+    apt-get install -y r-base pandoc libcurl4-openssl-dev
+
+# Java for running IB inside container:
+# https://github.com/dockerfile/java/blob/master/oracle-java8/Dockerfile
+RUN echo oracle-java8-installer shared/accepted-oracle-license-v1-1 select true | debconf-set-selections && \
+    add-apt-repository -y ppa:webupd8team/java && \
+    apt-get update && apt-get install -y oracle-java8-installer && \
+    rm -rf /var/lib/apt/lists/* && rm -rf /var/cache/oracle-jdk8-installer
+
+# Install IB Gateway: Installs to ~/Jts
+RUN wget http://cdn.quantconnect.com/interactive/ibgateway-latest-standalone-linux-x64-v974.4g.sh && \
+    chmod 777 ibgateway-latest-standalone-linux-x64-v974.4g.sh && \
+    ./ibgateway-latest-standalone-linux-x64-v974.4g.sh -q && \
+    wget -O ~/Jts/jts.ini http://cdn.quantconnect.com/interactive/ibgateway-latest-standalone-linux-x64-v974.4g.jts.ini && \
+    rm ibgateway-latest-standalone-linux-x64-v974.4g.sh
+
+# Install IB Controller: Installs to ~/IBController
+RUN wget http://cdn.quantconnect.com/interactive/IBController-QuantConnect-3.2.0.5.zip && \
+    unzip IBController-QuantConnect-3.2.0.5.zip -d ~/IBController && \
+    chmod -R 777 ~/IBController && \
+    rm IBController-QuantConnect-3.2.0.5.zip
 
 WORKDIR /
-
-# Install TWS
-RUN yes n | /opt/TWS/ibgateway-latest-standalone-linux-x64-v960.2a.sh
 
 #CMD yes
 
